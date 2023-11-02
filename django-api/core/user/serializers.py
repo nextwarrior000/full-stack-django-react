@@ -8,7 +8,7 @@ class UserSerializer(AbstractSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        if not representation["avatar"]:
+        if "avatar" not in representation or not representation["avatar"]:
             representation["avatar"] = settings.DEFAULT_AVATAR_URL
             return representation
         if settings.DEBUG:  # debug enabled for dev

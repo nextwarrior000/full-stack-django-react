@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Registration from "./pages/Registration";
-import { Home } from "./pages/Home";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 function App() {
   return (
