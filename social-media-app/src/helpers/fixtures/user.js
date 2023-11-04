@@ -12,6 +12,7 @@ function userFixtures() {
     email: `${firstName}@yopmail.com`,
     bio: faker.lorem.sentence(20),
     username: firstName + lastName,
+    password: faker.lorem.slug(2),
     avatar: null,
     created: faker.date.recent(),
     updated: faker.date.recent(),
