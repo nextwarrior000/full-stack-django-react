@@ -21,13 +21,12 @@ axiosService.interceptors.response.use(
 
 const refreshAuthLogic = async (failedRequest) => {
   return axios
-    .post("http://localhost:8000/api/auth/refresh/", null, {
-      headers: {
-        Authorization: `Bearer ${getRefreshToken()}`,
-      },
+    .post("http://localhost:8000/api/auth/refresh/", {
+      refresh: getRefreshToken(),
     })
 
     .then((resp) => {
+      console.log("resp.data", resp.data);
       const { access, refresh, user } = resp.data;
 
       failedRequest.response.config.headers["Authorization"] =

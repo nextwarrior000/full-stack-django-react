@@ -12,6 +12,19 @@ class UserViewSet(AbstractViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
+    def get_serializer_context(self):
+        """
+        Extra context provided to the serializer class.
+        """
+        return {
+            'request': self.request,
+            # Include any other context if needed
+        }
+
+    def perform_create(self, serializer):
+
+        serializer.save()
+
     def get_queryset(self):
         if self.request.user.is_superuser:
             return User.objects.all()
@@ -23,9 +36,9 @@ class UserViewSet(AbstractViewSet):
         return obj
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(
+            data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

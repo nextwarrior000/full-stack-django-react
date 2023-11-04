@@ -12,6 +12,10 @@ class PostSerializer(AbstractSerializer):
         queryset=User.objects.all(), slug_field='public_id')
     liked = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
+
+    def get_comments_count(self, instance):
+        return instance.comment_set.count()
 
     def validate_author(self, value):
         if self.context["request"].user != value:
@@ -46,5 +50,5 @@ class PostSerializer(AbstractSerializer):
         # List of all the fields that can be included in a
         # request or a response
         fields = ['id', 'author', 'body', 'edited', 'liked',
-                  'likes_count', 'created', 'updated']
+                  'likes_count', 'comments_count', 'created', 'updated']
         read_only_fields = ["edited"]

@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Dropdown } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { getUser } from "../../hooks/user.actions";
 import { Context } from "../Layout";
-function CreatePost(props) {
-  const { refresh } = props;
+function UpdatePost(props) {
+  const { post, refresh } = props;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -16,8 +16,8 @@ function CreatePost(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const createPostForm = event.currentTarget;
-    if (createPostForm.checkValidity() === false) {
+    const updatePostForm = event.currentTarget;
+    if (updatePostForm.checkValidity() === false) {
       event.stopPropagation();
     }
     setValidated(true);
@@ -26,12 +26,12 @@ function CreatePost(props) {
       body: form.body,
     };
     axiosService
-      .post("post/", data)
+      .put(`post/${post?.id}/`, data)
       .then(() => {
         handleClose();
         setToaster({
           type: "success",
-          message: "Post created 🚀",
+          message: "Post updated 🚀",
           show: true,
           title: "Post!",
         });
@@ -46,18 +46,10 @@ function CreatePost(props) {
 
   return (
     <>
-      <Form.Group className="my-3 w-75">
-        <Form.Control
-          className="py-2 rounded-pill border-primary
-                 text-primary"
-          type="text"
-          placeholder="Write a post"
-          onClick={handleShow}
-        />
-      </Form.Group>
+      <Dropdown.Item onClick={handleShow}>Modify</Dropdown.Item>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton className="border-0">
-          <Modal.Title>Create Post</Modal.Title>
+          <Modal.Title>Update Post</Modal.Title>
         </Modal.Header>
         <Modal.Body className="border-0">
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -65,6 +57,7 @@ function CreatePost(props) {
               <Form.Control
                 name="body"
                 value={form.body}
+                defaultValue={post?.body}
                 onChange={(e) => setForm({ ...form, body: e.target.value })}
                 as="textarea"
                 rows={3}
@@ -85,4 +78,4 @@ function CreatePost(props) {
     </>
   );
 }
-export default CreatePost;
+export default UpdatePost;

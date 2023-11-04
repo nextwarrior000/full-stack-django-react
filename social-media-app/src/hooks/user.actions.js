@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosService from "../helpers/axios";
 export function useUserActions() {
   const navigate = useNavigate();
   const baseURL = "http://localhost:8000/api";
@@ -28,10 +29,29 @@ export function useUserActions() {
     navigate("/login");
   }
 
+  function edit(data, userId) {
+    return axiosService
+      .patch(`${baseURL}/user/${userId}/`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        // Registering the account in the store
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            access: getAccessToken(),
+            refresh: getRefreshToken(),
+            user: res.data,
+          })
+        );
+      });
+  }
+
   return {
     login,
     register,
     logout,
+    edit,
   };
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { format } from "timeago.js";
 import {
   LikeFilled,
@@ -7,12 +7,12 @@ import {
   MoreOutlined,
 } from "@ant-design/icons";
 import { Image, Card } from "react-bootstrap";
-import { randomAvatar } from "../../utils";
 import axiosService from "../../helpers/axios";
-import { Button, Modal, Form, Dropdown } from "react-bootstrap";
-import Toaster from "../Toaster";
+import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getUser } from "../../hooks/user.actions";
+import UpdatePost from "./UpdatePost";
+import { Context } from "../Layout";
 
 const MoreToggleIcon = React.forwardRef(({ onClick }, ref) => (
   <Link
@@ -28,9 +28,9 @@ const MoreToggleIcon = React.forwardRef(({ onClick }, ref) => (
 ));
 
 function Post(props) {
-  const { post, refresh } = props;
-  const [showToast, setShowToast] = useState(false);
+  const { post, refresh, isSinglePost } = props;
   const user = getUser();
+  const { setToaster } = useContext(Context);
   const handleLikeClick = (action) => {
     axiosService
       .post(`/post/${post.id}/${action}/`)
@@ -44,11 +44,25 @@ function Post(props) {
     axiosService
       .delete(`/post/${post.id}/`)
       .then(() => {
-        setShowToast(true);
+        setToaster({
+          type: "danger",
+          message: "Post deleted 🚀",
+          show: true,
+          title: "Post Deleted",
+        });
         refresh();
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        setToaster({
+          type: "danger",
+          message: "an error occurred when deleting a comment",
+          show: true,
+          title: "Comment",
+        });
+        console.error(err);
+      });
   };
+  console.log("post", post);
   return (
     <>
       <Card className="rounded-3 my-4">
@@ -59,7 +73,7 @@ function Post(props) {
           >
             <div className="d-flex flex-row">
               <Image
-                src={randomAvatar()}
+                src={post.author.avatar}
                 roundedCircle
                 width={48}
                 height={48}
@@ -82,7 +96,7 @@ function Post(props) {
                 <Dropdown>
                   <Dropdown.Toggle as={MoreToggleIcon}></Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item>Update</Dropdown.Item>
+                    <UpdatePost post={post} refresh={refresh} />
                     <Dropdown.Item
                       onClick={handleDelete}
                       className="text-danger"
@@ -114,7 +128,7 @@ function Post(props) {
           </div>
         </Card.Body>
         <Card.Footer
-          className="d-flex bg-white w-50
+          className="d-flex bg-white w-full
          justify-content-between border-0"
         >
           <div className="d-flex flex-row">
@@ -138,29 +152,31 @@ function Post(props) {
               <small>Like</small>
             </p>
           </div>
-          <div className="d-flex flex-row">
-            <CommentOutlined
-              style={{
-                width: "24px",
-                height: "24px",
-                padding: "2px",
-                fontSize: "20px",
-                color: "#C4C4C4",
-              }}
-            />
-            <p className="ms-1 mb-0">
-              <small>Comment</small>
+          {!isSinglePost && (
+            <p className="ms-1 fs-6">
+              <small>
+                <Link to={`/post/${post.id}/`}>
+                  {post.comments_count} comments
+                </Link>
+              </small>
             </p>
-          </div>
+          )}
         </Card.Footer>
       </Card>
-      <Toaster
-        title="Post!"
-        message="Post deleted"
-        type="danger"
-        showToast={showToast}
-        onClose={() => setShowToast(false)}
-      />
+      <div className="d-flex flex-row">
+        <CommentOutlined
+          style={{
+            width: "24px",
+            height: "24px",
+            padding: "2px",
+            fontSize: "20px",
+            color: "#C4C4C4",
+          }}
+        />
+        <p className="ms-1 mb-0">
+          <small>Comment</small>
+        </p>
+      </div>
     </>
   );
 }
