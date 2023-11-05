@@ -19,6 +19,9 @@
     "timeago.js": "^4.0.2",
     "web-vitals": "^2.1.0"
   },
+  "jest": {
+    "resetMocks": false
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -42,5 +45,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jest-localstorage-mock": "^2.4.26"
   }
 }
