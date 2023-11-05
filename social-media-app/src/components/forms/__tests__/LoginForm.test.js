@@ -5,7 +5,7 @@ import LoginForm from "../LoginForm";
 import userFixtures from "../../../helpers/fixtures/user";
 const userData = userFixtures();
 test("renders Login form", async () => {
-  const user = userEvent.setup();
+  const user = userEvent;
   render(<LoginForm />);
   const loginForm = screen.getByTestId("login-form");
   expect(loginForm).toBeInTheDocument();

@@ -65,7 +65,7 @@ function Post(props) {
   console.log("post", post);
   return (
     <>
-      <Card className="rounded-3 my-4">
+      <Card className="rounded-3 my-4" data-testid="post-test">
         <Card.Body>
           <Card.Title
             className="d-flex flex-row

@@ -1,8 +1,7 @@
-import { faker } from "@faker-js/faker";
 import { v4 as uuid4 } from "uuid";
 function userFixtures() {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
+  const firstName = "bilel";
+  const lastName = "salem";
   return {
     id: uuid4(),
     first_name: firstName,
@@ -10,12 +9,12 @@ function userFixtures() {
     name: firstName + " " + lastName,
     post_count: Math.floor(Math.random() * 10),
     email: `${firstName}@yopmail.com`,
-    bio: faker.lorem.sentence(20),
+    bio: " fqsdfqsdfqsdfqsdfjqkljdfkl",
     username: firstName + lastName,
-    password: faker.lorem.slug(2),
+    password: "qfds4f5q6sd4f56qsd@qfsdkfjqoksdjf",
     avatar: null,
-    created: faker.date.recent(),
-    updated: faker.date.recent(),
+    created: new Date(),
+    updated: new Date(),
   };
 }
 export default userFixtures;
